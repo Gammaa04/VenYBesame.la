@@ -4,6 +4,10 @@
 
 package com.mycompany.persistencia;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
 /**
  *
  * @author Jesus Gammael Soto Escalante 248336
@@ -11,6 +15,7 @@ package com.mycompany.persistencia;
 public class Persistencia {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("VenYBesamelaPU");
+        EntityManager em= emf.createEntityManager();
     }
 }
