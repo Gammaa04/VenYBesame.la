@@ -4,7 +4,9 @@
  */
 package Entity;
 
+import DTO.EstudianteDTO;
 import Entity.Enum.Carrera;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -25,13 +28,29 @@ public class Estudiante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Column(nullable = false)
     private Carrera carrera;
+    
+    @Column(nullable = false)
     private String descripcion;
+    
+    @Column()
     private String foto;
+    
+    @Column(length = 100,nullable = false)
     private String nombre;
+    
+    @Column(length = 70,nullable = false, name = "ap_paterno")
     private String apPaterno;
+    
+    @Column(length = 70,nullable = false,name = "ap_paterno")
     private String apMaterno;
+    
+    @Column(nullable = false,unique = true)
     private String correo;
+    
+    @Column(nullable = true)
     private String contraseña;
     
     
@@ -47,7 +66,9 @@ public class Estudiante implements Serializable {
     
     @OneToMany(mappedBy = "estudiante")
     private Set<EstudiantePreferencia> preferencias;
-
+    
+    
+    
     public Estudiante(Long id, Carrera carrera, String descripcion, String foto, String nombre, String apPaterno, String apMaterno, String correo, String contraseña, Set<Interaccion> interaccion, Set<Chat> matchs, Set<EstudianteHobby> Hobbys, Set<EstudiantePreferencia> preferencias) {
         this.id = id;
         this.carrera = carrera;

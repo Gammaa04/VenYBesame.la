@@ -39,7 +39,7 @@ public record EstudianteDTO(
         private Set<InteraccionDTO> interaccion;
         private Set<EstudianteHobbyDTO> Hobbys;
         private Set<EstudiantePreferenciaDTO> preferencias;
-
+        
         public BuiderEstudiante carrera(Carrera carrera) {
             this.carrera = carrera;
             return this;

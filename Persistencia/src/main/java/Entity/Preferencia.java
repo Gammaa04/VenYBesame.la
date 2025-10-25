@@ -5,6 +5,7 @@
 package Entity;
 
 import Entity.Enum.Sexo;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,8 +33,8 @@ public class Preferencia implements Serializable {
     
     
     @OneToMany(mappedBy = "preferencia")
+    @Column(nullable = false)
     private Set<EstudiantePreferencia> preferencias;
-    
     
 
     public Long getId() {

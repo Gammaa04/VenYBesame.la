@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,9 +27,17 @@ public class Mensaje implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Column(nullable = false)
     private Date fechaMensaje;
+    
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String contenido;
+    
+    @Column(nullable = false)
     private Estudiante estudiante;
+    
+    
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_chat")
     private Chat chat;

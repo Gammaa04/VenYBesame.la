@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,15 +29,22 @@ public class EstudiantePreferencia implements Serializable {
     
     @ManyToOne ( )
     @JoinColumn(referencedColumnName = "id",name = "id_estudiante")
+    @Column(nullable = false)
     private Estudiante estudiante;
+    
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_preferencia")
+    @Column(nullable = false)
     private Preferencia preferencia;
 
     public EstudiantePreferencia(Long id, Estudiante estudiante, Preferencia preferencia) {
         this.id = id;
         this.estudiante = estudiante;
         this.preferencia = preferencia;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
     }
 
    

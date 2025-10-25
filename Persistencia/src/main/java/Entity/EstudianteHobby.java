@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,17 +29,23 @@ public class EstudianteHobby implements Serializable {
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_estudiante")
+    @Column(nullable = false)
     private Estudiante estudiante;
     
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_hobby")
+    @Column(nullable = false)
     private Hobby hobby;
 
     public EstudianteHobby(Long id, Estudiante estudiante, Hobby hobby) {
         this.id = id;
         this.estudiante = estudiante;
         this.hobby = hobby;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
     }
 
     
