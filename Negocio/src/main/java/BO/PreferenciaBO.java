@@ -1,6 +1,6 @@
 package BO;
 
-import DAO.Repository.IPreferenciaDAO;
+import InterfacesDAO.IPreferenciaDAO;
 import DTO.Enum.Sexo;
 import Entity.Preferencia;
 import InterfacesBO.IPreferenciaBO;

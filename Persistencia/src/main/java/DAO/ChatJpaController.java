@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import DAO.Repository.IChatDAO;
+import InterfacesDAO.IChatDAO;
 import DAO.exceptions.NonexistentEntityException;
 import Entity.Chat;
 import jakarta.persistence.Query;
@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import Entity.Estudiante;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +23,8 @@ import java.util.Optional;
  *
  * @author Jesus Gammael Soto Escalante 248336
  */
-public class ChatJpaController implements IChatDAO {
-
-    public ChatJpaController(EntityManagerFactory emf) {
+public class ChatJpaController implements Serializable {
+       public ChatJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -33,7 +33,37 @@ public class ChatJpaController implements IChatDAO {
         return emf.createEntityManager();
     }
 
-  
+    public void create(Chat chat) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            Estudiante e1 = chat.getE1();
+            if (e1 != null) {
+                e1 = em.getReference(e1.getClass(), e1.getId());
+                chat.setE1(e1);
+            }
+            Estudiante e2 = chat.getE2();
+            if (e2 != null) {
+                e2 = em.getReference(e2.getClass(), e2.getId());
+                chat.setE2(e2);
+            }
+            em.persist(chat);
+            if (e1 != null) {
+                e1.getMatchs().add(chat);
+                e1 = em.merge(e1);
+            }
+            if (e2 != null) {
+                e2.getMatchs().add(chat);
+                e2 = em.merge(e2);
+            }
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
 
     public void edit(Chat chat) throws NonexistentEntityException, Exception {
         EntityManager em = null;
@@ -162,106 +192,5 @@ public class ChatJpaController implements IChatDAO {
         } finally {
             em.close();
         }
-    }
-
-    @Override
-    public Optional<Chat> buscarMatchEntreEstudiantes(Long idEstudiante1, Long idEstudiante2) throws SQLException {
-         EntityManager em = getEntityManager();
-    try {
-        // Busca si existe un chat entre A y B O entre B y A
-        String jpql = "SELECT c FROM Chat c WHERE " +
-                      "(c.e1.id = :id1 AND c.e2.id = :id2) OR " +
-                      "(c.e1.id = :id2 AND c.e2.id = :id1)";
-        
-        // El resultado puede ser Optional.empty si no encuentra nada.
-        Chat chat = em.createQuery(jpql, Chat.class)
-            .setParameter("id1", idEstudiante1)
-            .setParameter("id2", idEstudiante2)
-            .getSingleResult(); 
-
-        return Optional.ofNullable(chat);
-    } catch (Exception e) {
-        return Optional.empty(); 
-    } finally {
-        if (em != null) em.close();
-    }
-    }
-
-    @Override
-    public List<Chat> buscarChatsPorEstudiante(Long idEstudiante) throws SQLException {
-        EntityManager em = getEntityManager();
-    try {
-        // Busca chats donde el estudiante es e1 o e2
-        String jpql = "SELECT c FROM Chat c WHERE c.e1.id = :id OR c.e2.id = :id";
-        
-        List<Chat> chats = em.createQuery(jpql, Chat.class)
-            .setParameter("id", idEstudiante)
-            .getResultList();
-
-        return chats;
-    } finally {
-        if (em != null) em.close();
-    }
-    }
-
-    @Override
-    public Chat read(long id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Chat update(Chat entity) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(long id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Chat> findEntities() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Chat> findEntities(int maxResults, int firstResult) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Chat create(Chat entity) throws SQLException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Estudiante e1 = entity.getE1();
-            if (e1 != null) {
-                e1 = em.getReference(e1.getClass(), e1.getId());
-                entity.setE1(e1);
-            }
-            Estudiante e2 = entity.getE2();
-            if (e2 != null) {
-                e2 = em.getReference(e2.getClass(), e2.getId());
-                entity.setE2(e2);
-            }
-            em.persist(entity);
-            if (e1 != null) {
-                e1.getMatchs().add(entity);
-                e1 = em.merge(e1);
-            }
-            if (e2 != null) {
-                e2.getMatchs().add(entity);
-                e2 = em.merge(e2);
-            }
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-        return entity;
-    
-    
     }
 }

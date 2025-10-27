@@ -5,8 +5,9 @@
 package DAO.imp;
 
 import DAO.MensajeJpaController;
-import DAO.Repository.IMensajeDAO;
+import InterfacesDAO.IMensajeDAO;
 import Entity.Mensaje;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.sql.SQLException;
@@ -20,17 +21,15 @@ import java.util.Optional;
 public class MensajeDAO implements IMensajeDAO {
 
     private final MensajeJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public MensajeDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new MensajeJpaController(emf);
     }
 
     // Metodos Específicos de IMensajeDAO
     @Override
     public List<Mensaje> buscarMensajesPorChat(Long idChat, int limit) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT m FROM Mensaje m WHERE m.chat.id = :idChat ORDER BY m.fechaMensaje ASC";
 

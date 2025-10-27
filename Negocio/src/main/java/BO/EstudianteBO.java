@@ -1,10 +1,10 @@
 package BO;
 
-import DAO.Repository.IChatDAO;
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IEstudianteHobbyDAO;
-import DAO.Repository.IEstudiantePreferenciaDAO;
-import DAO.Repository.IInteraccionDAO;
+import InterfacesDAO.IChatDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IEstudianteHobbyDAO;
+import InterfacesDAO.IEstudiantePreferenciaDAO;
+import InterfacesDAO.IInteraccionDAO;
 import DTO.EstudianteDTO;
 import Entity.Estudiante;
 import InterfacesBO.IEstudianteBO;

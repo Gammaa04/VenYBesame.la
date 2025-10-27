@@ -1,7 +1,7 @@
 
-package DAO.Repository;
+package InterfacesDAO;
 
-import DAO.repository.ICRUD;
+import DAO.Repository.ICRUD;
 import Entity.EstudiantePreferencia;
 import Entity.Preferencia;
 import java.sql.SQLException;

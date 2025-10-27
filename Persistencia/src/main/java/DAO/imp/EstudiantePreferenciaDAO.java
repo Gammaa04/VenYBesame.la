@@ -5,9 +5,10 @@
 package DAO.imp;
 
 import DAO.EstudiantePreferenciaJpaController;
-import DAO.Repository.IEstudiantePreferenciaDAO;
+import InterfacesDAO.IEstudiantePreferenciaDAO;
 import Entity.EstudiantePreferencia;
 import Entity.Preferencia;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.sql.SQLException;
@@ -20,16 +21,14 @@ import java.util.Optional;
  */
 public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
     private final EstudiantePreferenciaJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public EstudiantePreferenciaDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new EstudiantePreferenciaJpaController(emf);
     }
     // Metodos Específicos de IEstudiantePreferenciaDAO
     @Override
     public void eliminarPorEstudiante(Long idEstudiante) throws SQLException {
-          EntityManager em = emf.createEntityManager();
+          EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             // Elimina todas las preferencias asociadas a un estudiante
@@ -48,7 +47,7 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
 
     @Override
     public List<Preferencia> buscarPreferenciasPorEstudiante(Long idEstudiante) throws SQLException {
-      EntityManager em = emf.createEntityManager();
+      EntityManager em = JpaUtil.getEntityManager();
         try {
             // Consulta que une EstudiantePreferencia y Preferencia para obtener la lista de preferencias
             String jpql = "SELECT ep.preferencia FROM EstudiantePreferencia ep WHERE ep.estudiante.id = :idEstudiante";
@@ -65,7 +64,7 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
 
     @Override
     public void eliminarPorRelacion(Long idEstudiante, Long idPreferencia) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             // Busca y elimina el enlace específico

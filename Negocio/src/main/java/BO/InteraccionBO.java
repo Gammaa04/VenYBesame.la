@@ -4,9 +4,9 @@
  */
 package BO;
 
-import DAO.Repository.IChatDAO;
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IInteraccionDAO;
+import InterfacesDAO.IChatDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IInteraccionDAO;
 import DTO.Enum.Reaccion;
 import Entity.Chat;
 import Entity.Estudiante;

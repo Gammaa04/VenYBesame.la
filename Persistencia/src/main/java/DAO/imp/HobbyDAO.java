@@ -5,9 +5,10 @@
 package DAO.imp;
 
 import DAO.HobbyJpaController;
-import DAO.Repository.IHobbyDAO;
+import InterfacesDAO.IHobbyDAO;
 import DTO.Enum.TipoHobbies;
 import Entity.Hobby;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -23,16 +24,14 @@ import java.util.Optional;
 public class HobbyDAO implements IHobbyDAO{
 
     private final HobbyJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public HobbyDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new HobbyJpaController(emf);
     }
     // Metodos Específicos de IHobbyDAO
     @Override
     public Optional<Hobby> buscarPorTipo(TipoHobbies tipoHobby) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT h FROM Hobby h WHERE h.hobbie = :tipo";
             Query query = em.createQuery(jpql, Hobby.class);

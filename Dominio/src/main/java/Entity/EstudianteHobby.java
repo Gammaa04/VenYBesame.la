@@ -12,8 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
-import java.util.Set;
-import org.hibernate.annotations.ManyToAny;
+
 
 /**
  *
@@ -29,13 +28,11 @@ public class EstudianteHobby implements Serializable {
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_estudiante")
-    @Column(nullable = false)
     private Estudiante estudiante;
     
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_hobby")
-    @Column(nullable = false)
     private Hobby hobby;
 
     public EstudianteHobby(Long id, Estudiante estudiante, Hobby hobby) {

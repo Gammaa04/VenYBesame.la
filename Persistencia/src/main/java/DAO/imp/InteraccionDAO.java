@@ -2,8 +2,9 @@
 package DAO.imp;
 
 import DAO.InteraccionJpaController;
-import DAO.Repository.IInteraccionDAO;
+import InterfacesDAO.IInteraccionDAO;
 import Entity.Interaccion;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -19,17 +20,15 @@ import java.util.Optional;
 public class InteraccionDAO implements IInteraccionDAO{
 
     private final InteraccionJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public InteraccionDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new InteraccionJpaController(emf);
     }
     
     // Metodos Específicos de IInteraccionDAO (Consultas Complejas)
     @Override
     public Optional<Interaccion> buscarInteraccionReciproca(Long idEstudianteA, Long idEstudianteB) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             // Busca si B (idEstudianteB) le dio LIKE a A (idEstudianteA)
             String jpql = "SELECT i FROM Interaccion i WHERE i.estudiante.id = :idB AND i.estudianteDestino.id = :idA AND i.reaccion = 'LIKE'";
@@ -50,7 +49,7 @@ public class InteraccionDAO implements IInteraccionDAO{
 
     @Override
     public boolean yaExisteInteraccion(Long idEstudianteOrigen, Long idEstudianteDestino) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             // Verifica si el Origen ya interactuo con el Destino
             String jpql = "SELECT COUNT(i) FROM Interaccion i WHERE i.estudiante.id = :idOrigen AND i.estudianteDestino.id = :idDestino";
@@ -69,7 +68,8 @@ public class InteraccionDAO implements IInteraccionDAO{
 
     @Override
     public void eliminarInteraccionesPorEstudiante(Long idEstudiante) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
+                
         try {
             // Transaccion necesaria para DELETE
             em.getTransaction().begin();

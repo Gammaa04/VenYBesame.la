@@ -29,12 +29,10 @@ public class EstudiantePreferencia implements Serializable {
     
     @ManyToOne ( )
     @JoinColumn(referencedColumnName = "id",name = "id_estudiante")
-    @Column(nullable = false)
     private Estudiante estudiante;
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_preferencia")
-    @Column(nullable = false)
     private Preferencia preferencia;
 
     public EstudiantePreferencia(Long id, Estudiante estudiante, Preferencia preferencia) {

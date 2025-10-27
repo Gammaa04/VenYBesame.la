@@ -2,8 +2,9 @@
 package DAO.imp;
 
 import DAO.ChatJpaController;
-import DAO.Repository.IChatDAO;
+import InterfacesDAO.IChatDAO;
 import Entity.Chat;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -18,10 +19,8 @@ import java.util.Optional;
  */
 public class ChatDAO implements IChatDAO{
     private final ChatJpaController jpaController;
-    private final EntityManagerFactory emf;
-
+   
     public ChatDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new ChatJpaController(emf);
     }
     
@@ -63,7 +62,7 @@ public class ChatDAO implements IChatDAO{
     
     @Override
     public Optional<Chat> buscarMatchEntreEstudiantes(Long idEstudiante1, Long idEstudiante2) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT c FROM Chat c WHERE " +
                           "(c.e1.id = :id1 AND c.e2.id = :id2) OR " +
@@ -85,7 +84,7 @@ public class ChatDAO implements IChatDAO{
 
     @Override
     public List<Chat> buscarChatsPorEstudiante(Long idEstudiante) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT c FROM Chat c WHERE c.e1.id = :id OR c.e2.id = :id";
             

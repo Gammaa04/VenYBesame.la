@@ -33,7 +33,6 @@ public class Preferencia implements Serializable {
     
     
     @OneToMany(mappedBy = "preferencia")
-    @Column(nullable = false)
     private Set<EstudiantePreferencia> preferencias;
     
 

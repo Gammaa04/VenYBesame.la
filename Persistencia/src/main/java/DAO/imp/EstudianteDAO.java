@@ -2,8 +2,9 @@
 package DAO.imp;
 
 import DAO.EstudianteJpaController;
-import DAO.Repository.IEstudianteDAO;
+import InterfacesDAO.IEstudianteDAO;
 import Entity.Estudiante;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -18,10 +19,8 @@ import java.util.Optional;
  */
 public class EstudianteDAO implements IEstudianteDAO{
     private final EstudianteJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public EstudianteDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new EstudianteJpaController(emf);
     }
     
@@ -65,7 +64,7 @@ public class EstudianteDAO implements IEstudianteDAO{
 
     @Override
     public Optional<Estudiante> buscarPorCorreo(String correo) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT e FROM Estudiante e WHERE e.correo = :correo";
             Query query = em.createQuery(jpql, Estudiante.class);
@@ -83,7 +82,7 @@ public class EstudianteDAO implements IEstudianteDAO{
 
     @Override
     public Optional<Estudiante> buscarPorCredenciales(String correo, String contrasena) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT e FROM Estudiante e WHERE e.correo = :correo AND e.contraseña = :contrasena";
             Query query = em.createQuery(jpql, Estudiante.class);
@@ -102,7 +101,7 @@ public class EstudianteDAO implements IEstudianteDAO{
 
     @Override
     public List<Estudiante> buscarCandidatos(Long idEstudianteActual, int limit) throws SQLException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT e FROM Estudiante e WHERE e.id != :idActual AND e.id NOT IN " +
                           "(SELECT i.estudianteDestino.id FROM Interaccion i WHERE i.estudiante.id = :idActual)";

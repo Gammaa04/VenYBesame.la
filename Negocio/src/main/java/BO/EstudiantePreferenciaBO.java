@@ -1,9 +1,9 @@
 
 package BO;
 
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IEstudiantePreferenciaDAO;
-import DAO.Repository.IPreferenciaDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IEstudiantePreferenciaDAO;
+import InterfacesDAO.IPreferenciaDAO;
 import Entity.Estudiante;
 import Entity.EstudiantePreferencia;
 import Entity.Preferencia;

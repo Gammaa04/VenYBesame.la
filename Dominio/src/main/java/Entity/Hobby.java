@@ -30,7 +30,6 @@ public class Hobby implements Serializable {
     private TipoHobbies hobbie;
     
     @OneToMany(mappedBy = "hobby")
-    @Column(nullable = false)
     private Set<EstudianteHobby> estudiante;
 
     public Hobby(Long id, TipoHobbies hobbie, Set<EstudianteHobby> estudiante) {

@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import DAO.Repository.IChatDAO;
+import InterfacesDAO.IChatDAO;
 import DAO.exceptions.IllegalOrphanException;
 import DAO.exceptions.NonexistentEntityException;
 import java.io.Serializable;

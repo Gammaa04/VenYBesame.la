@@ -5,11 +5,12 @@
 package DAO.imp;
 
 import DAO.EstudianteHobbyJpaController;
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IEstudianteHobbyDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IEstudianteHobbyDAO;
 import Entity.Estudiante;
 import Entity.EstudianteHobby;
 import Entity.Hobby;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.sql.SQLException;
@@ -23,17 +24,15 @@ import java.util.Optional;
 public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
 
     private final EstudianteHobbyJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public EstudianteHobbyDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new EstudianteHobbyJpaController(emf);
     } 
     
     // Metodos Específicos de IEstudianteHobbyDAO
     @Override
     public void eliminarPorEstudiante(Long idEstudiante) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             // Elimina todos los hobbies asociados a un estudiante
@@ -52,7 +51,7 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
 
     @Override
     public List<Hobby> buscarHobbiesPorEstudiante(Long idEstudiante) throws SQLException {
-     EntityManager em = emf.createEntityManager();
+     EntityManager em = JpaUtil.getEntityManager();
         try {
             // Consulta que une EstudianteHobby y Hobby para obtener la lista de hobbies
             String jpql = "SELECT eh.hobby FROM EstudianteHobby eh WHERE eh.estudiante.id = :idEstudiante";
@@ -69,7 +68,7 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
 
     @Override
     public void eliminarPorRelacion(Long idEstudiante, Long idHobby) throws SQLException {
-      EntityManager em = emf.createEntityManager();
+      EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             // Busca y elimina el enlace específico

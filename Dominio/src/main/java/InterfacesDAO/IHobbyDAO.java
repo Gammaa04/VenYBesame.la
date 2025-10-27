@@ -1,7 +1,7 @@
 
-package DAO.Repository;
+package InterfacesDAO;
 
-import DAO.repository.ICRUD;
+import DAO.Repository.ICRUD;
 import DTO.Enum.TipoHobbies;
 import Entity.Hobby;
 import java.sql.SQLException;

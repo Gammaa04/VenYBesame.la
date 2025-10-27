@@ -41,7 +41,7 @@ public class Estudiante implements Serializable {
     @Column(length = 70,nullable = false, name = "ap_paterno")
     private String apPaterno;
     
-    @Column(length = 70,nullable = false,name = "ap_paterno")
+    @Column(length = 70,nullable = false,name = "ap_materno")
     private String apMaterno;
     
     @Column(nullable = false,unique = true)

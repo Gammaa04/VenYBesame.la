@@ -33,7 +33,8 @@ public class Mensaje implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contenido;
     
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_estudiante_fk", nullable = false)
     private Estudiante estudiante;
     
     

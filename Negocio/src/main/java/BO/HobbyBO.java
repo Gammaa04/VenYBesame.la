@@ -1,7 +1,7 @@
 
 package BO;
 
-import DAO.Repository.IHobbyDAO;
+import InterfacesDAO.IHobbyDAO;
 import DTO.Enum.TipoHobbies;
 import Entity.Hobby;
 import InterfacesBO.IHobbyBO;

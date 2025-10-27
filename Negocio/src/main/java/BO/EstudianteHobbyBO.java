@@ -4,9 +4,9 @@
  */
 package BO;
 
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IEstudianteHobbyDAO;
-import DAO.Repository.IHobbyDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IEstudianteHobbyDAO;
+import InterfacesDAO.IHobbyDAO;
 import Entity.Estudiante;
 import Entity.EstudianteHobby;
 import Entity.Hobby;

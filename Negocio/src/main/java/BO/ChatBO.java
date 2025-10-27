@@ -1,9 +1,9 @@
 
 package BO;
 
-import DAO.Repository.IChatDAO;
-import DAO.Repository.IEstudianteDAO;
-import DAO.Repository.IMensajeDAO;
+import InterfacesDAO.IChatDAO;
+import InterfacesDAO.IEstudianteDAO;
+import InterfacesDAO.IMensajeDAO;
 import DTO.MensajeDTO;
 import Entity.Chat;
 import Entity.Estudiante;

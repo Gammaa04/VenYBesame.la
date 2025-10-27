@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
-import org.hibernate.annotations.ManyToAny;
 
 /**
  *
@@ -30,17 +29,14 @@ public class Chat implements Serializable {
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_estudiante1")
-    @Column(nullable = false)
     private Estudiante e1;
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_estudiante2")
-    @Column(nullable = false)
     private Estudiante e2;
     
     
     @OneToMany(mappedBy = "chat")
-    @Column(nullable = false)
     private List<Mensaje> mensajes;
 
     public Chat(Long id, Estudiante e1, Estudiante e2, List<Mensaje> mensajes) {

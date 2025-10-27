@@ -5,9 +5,10 @@
 package DAO.imp;
 
 import DAO.PreferenciaJpaController;
-import DAO.Repository.IPreferenciaDAO;
+import InterfacesDAO.IPreferenciaDAO;
 import DTO.Enum.Sexo;
 import Entity.Preferencia;
+import JPAUtil.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -23,16 +24,14 @@ import java.util.Optional;
 public class PreferenciaDAO implements IPreferenciaDAO{
 
     private final PreferenciaJpaController jpaController;
-    private final EntityManagerFactory emf;
 
     public PreferenciaDAO(EntityManagerFactory emf) {
-        this.emf = emf;
         this.jpaController = new PreferenciaJpaController(emf);
     }
     // Metodos Específicos de IPreferenciaDAO
     @Override
     public Optional<Preferencia> buscarPorSexo(Sexo sexo) throws SQLException {
-       EntityManager em = emf.createEntityManager();
+       EntityManager em = JpaUtil.getEntityManager();
         try {
             String jpql = "SELECT p FROM Preferencia p WHERE p.sexo = :sexo";
             Query query = em.createQuery(jpql, Preferencia.class);

@@ -35,12 +35,10 @@ public class Interaccion implements Serializable {
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_estudiante")
-    @Column(nullable = false)
     private Estudiante estudiante;
     
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "id_estudiante_destino")
-    @Column(nullable = false)
     private Estudiante estudianteDestino; // <-- Este es el DESTINO
 
     public Interaccion() {
