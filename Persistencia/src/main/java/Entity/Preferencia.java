@@ -4,7 +4,7 @@
  */
 package Entity;
 
-import Entity.Enum.Sexo;
+import DTO.Enum.Sexo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,5 +44,30 @@ public class Preferencia implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
+    public Set<EstudiantePreferencia> getPreferencias() {
+        return preferencias;
+    }
+
+    public void setPreferencias(Set<EstudiantePreferencia> preferencias) {
+        this.preferencias = preferencias;
+    }
+    
     
 }

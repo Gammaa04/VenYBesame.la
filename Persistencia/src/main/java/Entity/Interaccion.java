@@ -4,8 +4,7 @@
  */
 package Entity;
 
-import DTO.InteraccionDTO;
-import Entity.Enum.Reaccion;
+import DTO.Enum.Reaccion;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,16 +37,31 @@ public class Interaccion implements Serializable {
     @JoinColumn(referencedColumnName = "id",name = "id_estudiante")
     @Column(nullable = false)
     private Estudiante estudiante;
+    
+    @ManyToOne()
+    @JoinColumn(referencedColumnName = "id", name = "id_estudiante_destino")
+    @Column(nullable = false)
+    private Estudiante estudianteDestino; // <-- Este es el DESTINO
 
-   
-    
-    
-    public Interaccion(Long id, Reaccion reaccion, Date fecha, Estudiante estudiante) {
+    public Interaccion() {
+    }
+
+    public Interaccion(Long id, Reaccion reaccion, Date fecha, Estudiante estudiante, Estudiante estudianteDestino) {
         this.id = id;
         this.reaccion = reaccion;
         this.fecha = fecha;
         this.estudiante = estudiante;
+        this.estudianteDestino = estudianteDestino;
     }
+
+    public Estudiante getEstudianteDestino() {
+        return estudianteDestino;
+    }
+
+    public void setEstudianteDestino(Estudiante estudianteDestino) {
+        this.estudianteDestino = estudianteDestino;
+    }
+
 
     public Estudiante getEstudiante() {
         return estudiante;

@@ -4,17 +4,14 @@
  */
 package Entity;
 
-import DTO.EstudianteDTO;
-import Entity.Enum.Carrera;
+import DTO.Enum.Carrera;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Set;
 
 /**

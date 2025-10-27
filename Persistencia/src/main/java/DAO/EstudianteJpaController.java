@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import DAO.Repository.IChatDAO;
 import DAO.exceptions.IllegalOrphanException;
 import DAO.exceptions.NonexistentEntityException;
 import java.io.Serializable;
@@ -19,14 +20,16 @@ import Entity.Estudiante;
 import Entity.EstudiantePreferencia;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
  * @author Jesus Gammael Soto Escalante 248336
  */
-public class EstudianteJpaController implements Serializable {
+    public class EstudianteJpaController  {
 
     public EstudianteJpaController(EntityManagerFactory emf) {
         this.emf = emf;
@@ -308,5 +311,6 @@ public class EstudianteJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+
 }

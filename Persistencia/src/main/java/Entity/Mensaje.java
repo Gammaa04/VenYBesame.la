@@ -13,8 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import org.hibernate.annotations.ManyToAny;
+
 
 /**
  *
@@ -41,8 +40,9 @@ public class Mensaje implements Serializable {
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id",name = "id_chat")
     private Chat chat;
-    
-    
+
+    public Mensaje() {
+    }
     
     
 
@@ -53,5 +53,39 @@ public class Mensaje implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Date getFechaMensaje() {
+        return fechaMensaje;
+    }
+
+    public void setFechaMensaje(Date fechaMensaje) {
+        this.fechaMensaje = fechaMensaje;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+    
+    
     
 }

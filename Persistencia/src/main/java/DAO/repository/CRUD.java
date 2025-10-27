@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DAO.Repository;
+package DAO.repository;
 
 import Entity.Estudiante;
 import jakarta.persistence.EntityManager;
@@ -12,6 +12,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -48,22 +49,7 @@ public class CRUD<T> implements ICRUD {
 
     }
 
-    @Override
-    public Object read(long id) throws SQLException {
-        try {
-            T find = em.find((Class<T>) type, id);
-            if (find == null) {
-                throw new Exception("Error: no fue encontrado la entidad con el id " + id);
-            }
-            return find;
-
-        } catch (Exception e) {
-            throw new SQLException(e);
-        } finally {
-            em.close();
-        }
-    }
-
+  
     @Override
     public Object update(Object entity) throws SQLException {
         try {
@@ -118,6 +104,22 @@ public class CRUD<T> implements ICRUD {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Optional read(long id) throws SQLException {
+        try {
+            T find = em.find((Class<T>) type, id);
+            if (find == null) {
+                throw new Exception("Error: no fue encontrado la entidad con el id " + id);
+            }
+            return (Optional) find;
+
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             em.close();
         }
