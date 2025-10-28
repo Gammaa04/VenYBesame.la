@@ -10,4 +10,16 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>com.mycompany.dominio.Dominio</exec.mainClass>
     </properties>
+    
+    <dependencies>
+    <dependency>
+
+            <groupId>jakarta.persistence</groupId>
+
+            <artifactId>jakarta.persistence-api</artifactId>
+
+            <version>3.2.0</version>
+
+        </dependency>
+    </dependencies>
 </project>
