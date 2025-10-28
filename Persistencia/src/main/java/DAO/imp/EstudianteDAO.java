@@ -64,8 +64,9 @@ public class EstudianteDAO implements IEstudianteDAO{
 
     @Override
     public Optional<Estudiante> buscarPorCorreo(String correo) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try( EntityManager em = JpaUtil.getEntityManager()) {
+            
             String jpql = "SELECT e FROM Estudiante e WHERE e.correo = :correo";
             Query query = em.createQuery(jpql, Estudiante.class);
             query.setParameter("correo", correo);
@@ -75,15 +76,13 @@ public class EstudianteDAO implements IEstudianteDAO{
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar estudiante por correo.", ex);
-        } finally {
-            if (em != null) em.close();
         }
     }
 
     @Override
     public Optional<Estudiante> buscarPorCredenciales(String correo, String contrasena) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try( EntityManager em = JpaUtil.getEntityManager()) {
             String jpql = "SELECT e FROM Estudiante e WHERE e.correo = :correo AND e.contraseña = :contrasena";
             Query query = em.createQuery(jpql, Estudiante.class);
             query.setParameter("correo", correo);
@@ -94,15 +93,13 @@ public class EstudianteDAO implements IEstudianteDAO{
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar estudiante por credenciales.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override
     public List<Estudiante> buscarCandidatos(Long idEstudianteActual, int limit) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        
+        try(EntityManager em = JpaUtil.getEntityManager()){
             String jpql = "SELECT e FROM Estudiante e WHERE e.id != :idActual AND e.id NOT IN " +
                           "(SELECT i.estudianteDestino.id FROM Interaccion i WHERE i.estudiante.id = :idActual)";
             
@@ -112,9 +109,7 @@ public class EstudianteDAO implements IEstudianteDAO{
                 .getResultList();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar candidatos.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override

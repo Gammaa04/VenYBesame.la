@@ -7,6 +7,7 @@ package Entity;
 import DTO.Enum.Carrera;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,17 +52,17 @@ public class Estudiante implements Serializable {
     private String contraseña;
     
     
-    @OneToMany(mappedBy = "e1")
+    @OneToMany(mappedBy = "e1", fetch = FetchType.EAGER)
     private Set<Chat> matchs;
     
-    @OneToMany(mappedBy = "estudiante")
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.EAGER)
     private Set<Interaccion> interaccion;
     
-    @OneToMany(mappedBy = "estudiante")
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.EAGER)
     private Set<EstudianteHobby> Hobbys;
     
     
-    @OneToMany(mappedBy = "estudiante")
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.EAGER)
     private Set<EstudiantePreferencia> preferencias;
     
     

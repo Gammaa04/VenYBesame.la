@@ -28,8 +28,8 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
     // Metodos Específicos de IEstudiantePreferenciaDAO
     @Override
     public void eliminarPorEstudiante(Long idEstudiante) throws SQLException {
-          EntityManager em = JpaUtil.getEntityManager();
-        try {
+          
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             em.getTransaction().begin();
             // Elimina todas las preferencias asociadas a un estudiante
             String jpql = "DELETE FROM EstudiantePreferencia ep WHERE ep.estudiante.id = :idEstudiante";
@@ -38,17 +38,20 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
               .executeUpdate();
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (em != null && em.getTransaction().isActive()) em.getTransaction().rollback();
+            // Rollback
+            try (EntityManager rollbackEm = JpaUtil.getEntityManager()) {
+                 if (rollbackEm.getTransaction().isActive()) {
+                     rollbackEm.getTransaction().rollback();
+                 }
+            } catch (Exception rollbackEx) { /* Ignorar */ }
             throw new SQLException("Error al eliminar enlaces de preferencia por estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override
     public List<Preferencia> buscarPreferenciasPorEstudiante(Long idEstudiante) throws SQLException {
-      EntityManager em = JpaUtil.getEntityManager();
-        try {
+      
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             // Consulta que une EstudiantePreferencia y Preferencia para obtener la lista de preferencias
             String jpql = "SELECT ep.preferencia FROM EstudiantePreferencia ep WHERE ep.estudiante.id = :idEstudiante";
             
@@ -57,15 +60,13 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
                 .getResultList();
         } catch (Exception ex) {
             throw new SQLException("Error al listar preferencias del estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
         }
     }
 
     @Override
     public void eliminarPorRelacion(Long idEstudiante, Long idPreferencia) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             em.getTransaction().begin();
             // Busca y elimina el enlace específico
             String jpql = "DELETE FROM EstudiantePreferencia ep WHERE ep.estudiante.id = :idEstudiante AND ep.preferencia.id = :idPreferencia";
@@ -78,11 +79,14 @@ public class EstudiantePreferenciaDAO implements IEstudiantePreferenciaDAO{
                 throw new SQLException("El enlace Estudiante-Preferencia no existe para eliminar.");
             }
         } catch (Exception ex) {
-            if (em != null && em.getTransaction().isActive()) em.getTransaction().rollback();
+            // Rollback
+            try (EntityManager rollbackEm = JpaUtil.getEntityManager()) {
+                 if (rollbackEm.getTransaction().isActive()) {
+                     rollbackEm.getTransaction().rollback();
+                 }
+            } catch (Exception rollbackEx) { /* Ignorar */ }
             throw new SQLException("Error al eliminar el enlace específico de preferencia.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
    // Metodos de ICRUD
     @Override

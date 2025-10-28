@@ -80,10 +80,10 @@ public class InteraccionBO implements IInteraccionBO{
 
         try {
             if (interaccionDAO.yaExisteInteraccion(idEstudianteOrigen, idEstudianteDestino)) {
-                throw new IllegalArgumentException("Ya existe una interacción registrada entre estos estudiantes.");
+                throw new IllegalArgumentException("Ya existe una interaccion registrada entre estos estudiantes.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al verificar la unicidad de la Interacción.", e);
+            throw new RuntimeException("Error al verificar la unicidad de la Interaccion.", e);
         }
 
 

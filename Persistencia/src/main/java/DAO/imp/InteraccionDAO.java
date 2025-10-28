@@ -1,7 +1,7 @@
-
-package DAO.imp;
+    package DAO.imp;
 
 import DAO.InteraccionJpaController;
+import DTO.Enum.Reaccion;
 import InterfacesDAO.IInteraccionDAO;
 import Entity.Interaccion;
 import JPAUtil.JpaUtil;
@@ -28,29 +28,28 @@ public class InteraccionDAO implements IInteraccionDAO{
     // Metodos Específicos de IInteraccionDAO (Consultas Complejas)
     @Override
     public Optional<Interaccion> buscarInteraccionReciproca(Long idEstudianteA, Long idEstudianteB) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             // Busca si B (idEstudianteB) le dio LIKE a A (idEstudianteA)
-            String jpql = "SELECT i FROM Interaccion i WHERE i.estudiante.id = :idB AND i.estudianteDestino.id = :idA AND i.reaccion = 'LIKE'";
-            
-            Query query = em.createQuery(jpql, Interaccion.class);
-            query.setParameter("idA", idEstudianteA);
-            query.setParameter("idB", idEstudianteB);
+            String jpql = "SELECT i FROM Interaccion i WHERE i.estudiante.id = :idB AND i.estudianteDestino.id = :idA AND i.reaccion = :reaccionLike";
+        
+        Query query = em.createQuery(jpql, Interaccion.class);
+        query.setParameter("idA", idEstudianteA);
+        query.setParameter("idB", idEstudianteB);
+        query.setParameter("reaccionLike", Reaccion.LIKE);
             
             return Optional.ofNullable((Interaccion) query.getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar Interaccion recíproca.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override
     public boolean yaExisteInteraccion(Long idEstudianteOrigen, Long idEstudianteDestino) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             // Verifica si el Origen ya interactuo con el Destino
             String jpql = "SELECT COUNT(i) FROM Interaccion i WHERE i.estudiante.id = :idOrigen AND i.estudianteDestino.id = :idDestino";
             
@@ -61,16 +60,14 @@ public class InteraccionDAO implements IInteraccionDAO{
             return (Long) query.getSingleResult() > 0;
         } catch (Exception ex) {
             throw new SQLException("Error al verificar existencia de interacion.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override
     public void eliminarInteraccionesPorEstudiante(Long idEstudiante) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
+        
                 
-        try {
+        try(EntityManager em = JpaUtil.getEntityManager();) {
             // Transaccion necesaria para DELETE
             em.getTransaction().begin();
             // Elimina todas las interacciones donde el estudiante es origen o destino
@@ -80,12 +77,18 @@ public class InteraccionDAO implements IInteraccionDAO{
               .executeUpdate();
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (em != null && em.getTransaction().isActive()) em.getTransaction().rollback();
-            throw new SQLException("Error al eliminar interacciones del estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
+            try (EntityManager rollbackEm = JPAUtil.JpaUtil.getEntityManager()) {
+             if (rollbackEm.getTransaction().isActive()) {
+                 rollbackEm.getTransaction().rollback();
+             }
+        } catch (Exception rollbackEx) {
         }
-     }
+        
+        // Relanzar la excepcion original para notificar a la capa BO
+        throw new SQLException("Error al eliminar interacciones del estudiante.", ex);
+    }
+        } 
+     
 
     // Implementacion de ICRU
     @Override

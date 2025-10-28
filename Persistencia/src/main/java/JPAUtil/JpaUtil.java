@@ -15,18 +15,30 @@ import jakarta.persistence.PersistenceConfiguration;
  */
 public class JpaUtil {
     private static final String PERSISTENCE_UNIT= "VenYBesamelaPU";
-    private static EntityManager em;
+    private static EntityManagerFactory emf;
     
     private JpaUtil(){
         
     }
     
-    public static  EntityManager getEntityManager(){
-        if (em==null) {
-            em=Persistence.createEntityManagerFactory(PERSISTENCE_UNIT).createEntityManager();
+    public static  EntityManagerFactory getEntityManagerFactory(){
+       
+        if (emf==null) {
+            emf=Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
         }
-        return em;
-        
+        return emf;
 
     }
+
+    public static EntityManager getEntityManager() {
+        return getEntityManagerFactory().createEntityManager();
+    }
+
+    public static void closeEntityManagerFactory() {
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+            emf = null;
+        }
+    }
+
 }

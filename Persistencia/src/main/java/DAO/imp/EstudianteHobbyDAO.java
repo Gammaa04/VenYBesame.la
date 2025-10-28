@@ -32,8 +32,8 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
     // Metodos Específicos de IEstudianteHobbyDAO
     @Override
     public void eliminarPorEstudiante(Long idEstudiante) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             em.getTransaction().begin();
             // Elimina todos los hobbies asociados a un estudiante
             String jpql = "DELETE FROM EstudianteHobby eh WHERE eh.estudiante.id = :idEstudiante";
@@ -42,17 +42,22 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
               .executeUpdate();
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (em != null && em.getTransaction().isActive()) em.getTransaction().rollback();
-            throw new SQLException("Error al eliminar enlaces de hobby por estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
+            try (EntityManager rollbackEm = JpaUtil.getEntityManager()) {
+             if (rollbackEm.getTransaction().isActive()) {
+                 rollbackEm.getTransaction().rollback();
+             }
+        } catch (Exception rollbackEx) {
+          
+        }
+        
+        throw new SQLException("Error al eliminar enlaces de hobby por estudiante.", ex);
         }
     }
 
     @Override
     public List<Hobby> buscarHobbiesPorEstudiante(Long idEstudiante) throws SQLException {
-     EntityManager em = JpaUtil.getEntityManager();
-        try {
+     
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             // Consulta que une EstudianteHobby y Hobby para obtener la lista de hobbies
             String jpql = "SELECT eh.hobby FROM EstudianteHobby eh WHERE eh.estudiante.id = :idEstudiante";
             
@@ -61,15 +66,13 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
                 .getResultList();
         } catch (Exception ex) {
             throw new SQLException("Error al listar hobbies del estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
         }
     }
 
     @Override
     public void eliminarPorRelacion(Long idEstudiante, Long idHobby) throws SQLException {
-      EntityManager em = JpaUtil.getEntityManager();
-        try {
+      
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             em.getTransaction().begin();
             // Busca y elimina el enlace específico
             String jpql = "DELETE FROM EstudianteHobby eh WHERE eh.estudiante.id = :idEstudiante AND eh.hobby.id = :idHobby";
@@ -82,11 +85,14 @@ public class EstudianteHobbyDAO implements IEstudianteHobbyDAO{
                 throw new SQLException("El enlace Estudiante-Hobby no existe para eliminar.");
             }
         } catch (Exception ex) {
-            if (em != null && em.getTransaction().isActive()) em.getTransaction().rollback();
+           // Rollback
+            try (EntityManager rollbackEm = JpaUtil.getEntityManager()) {
+                 if (rollbackEm.getTransaction().isActive()) {
+                     rollbackEm.getTransaction().rollback();
+                 }
+            } catch (Exception rollbackEx) { /* Ignorar */ }
             throw new SQLException("Error al eliminar el enlace específico de hobby.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     

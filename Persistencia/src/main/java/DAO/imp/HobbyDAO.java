@@ -31,8 +31,8 @@ public class HobbyDAO implements IHobbyDAO{
     // Metodos Específicos de IHobbyDAO
     @Override
     public Optional<Hobby> buscarPorTipo(TipoHobbies tipoHobby) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+      
+        try( EntityManager em = JpaUtil.getEntityManager()) {
             String jpql = "SELECT h FROM Hobby h WHERE h.hobbie = :tipo";
             Query query = em.createQuery(jpql, Hobby.class);
             query.setParameter("tipo", tipoHobby);
@@ -42,8 +42,6 @@ public class HobbyDAO implements IHobbyDAO{
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar Hobby por tipo.", ex);
-        } finally {
-            if (em != null) em.close();
         }
     }
 

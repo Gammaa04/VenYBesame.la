@@ -31,8 +31,8 @@ public class PreferenciaDAO implements IPreferenciaDAO{
     // Metodos Específicos de IPreferenciaDAO
     @Override
     public Optional<Preferencia> buscarPorSexo(Sexo sexo) throws SQLException {
-       EntityManager em = JpaUtil.getEntityManager();
-        try {
+       
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             String jpql = "SELECT p FROM Preferencia p WHERE p.sexo = :sexo";
             Query query = em.createQuery(jpql, Preferencia.class);
             query.setParameter("sexo", sexo);
@@ -42,9 +42,7 @@ public class PreferenciaDAO implements IPreferenciaDAO{
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar Preferencia por sexo.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     //Metodos de ICRUD

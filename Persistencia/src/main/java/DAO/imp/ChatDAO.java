@@ -62,8 +62,8 @@ public class ChatDAO implements IChatDAO{
     
     @Override
     public Optional<Chat> buscarMatchEntreEstudiantes(Long idEstudiante1, Long idEstudiante2) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             String jpql = "SELECT c FROM Chat c WHERE " +
                           "(c.e1.id = :id1 AND c.e2.id = :id2) OR " +
                           "(c.e1.id = :id2 AND c.e2.id = :id1)";
@@ -77,15 +77,13 @@ public class ChatDAO implements IChatDAO{
             return Optional.empty();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar Match entre estudiantes.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override
     public List<Chat> buscarChatsPorEstudiante(Long idEstudiante) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        
+        try(EntityManager em = JpaUtil.getEntityManager()){
             String jpql = "SELECT c FROM Chat c WHERE c.e1.id = :id OR c.e2.id = :id";
             
             return em.createQuery(jpql, Chat.class)
@@ -93,9 +91,7 @@ public class ChatDAO implements IChatDAO{
                 .getResultList();
         } catch (Exception ex) {
             throw new SQLException("Error al listar chats del estudiante.", ex);
-        } finally {
-            if (em != null) em.close();
-        }
+        } 
     }
 
     @Override

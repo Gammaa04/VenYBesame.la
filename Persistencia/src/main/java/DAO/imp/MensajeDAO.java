@@ -29,8 +29,8 @@ public class MensajeDAO implements IMensajeDAO {
     // Metodos Específicos de IMensajeDAO
     @Override
     public List<Mensaje> buscarMensajesPorChat(Long idChat, int limit) throws SQLException {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        
+        try(EntityManager em = JpaUtil.getEntityManager()) {
             String jpql = "SELECT m FROM Mensaje m WHERE m.chat.id = :idChat ORDER BY m.fechaMensaje ASC";
 
             return em.createQuery(jpql, Mensaje.class)
@@ -39,11 +39,7 @@ public class MensajeDAO implements IMensajeDAO {
                     .getResultList();
         } catch (Exception ex) {
             throw new SQLException("Error al buscar mensajes por chat.", ex);
-        } finally {
-            if (em != null) {
-                
-            }
-        }
+        } 
 
     }
 

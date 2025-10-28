@@ -17,7 +17,7 @@
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
       <property name="jakarta.persistence.jdbc.password" value="F170602Gr."/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+      <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="com.mycompany_Persistencia_jar_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
