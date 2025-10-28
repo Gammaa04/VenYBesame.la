@@ -80,7 +80,7 @@ public class Pruebas {
         System.out.println("=================================================");
 
         try {
-            // Se asume que la base de datos está limpia o con hbm2ddl.auto=update
+            // Se asume que la base de datos esta limpia
             List<Estudiante> estudiantesPrueba = cargarEstudiantesManuales();
 
             demostrarFuncionalidad(estudiantesPrueba);
@@ -93,7 +93,7 @@ public class Pruebas {
     }
 
     private static void inicializarServicios() {
-        // Inicialización de DAOs
+        // Inicializacion de DAOs
         estudianteDAO = new EstudianteDAO(EMF);
         interaccionDAO = new InteraccionDAO(EMF);
         chatDAO = new ChatDAO(EMF);
@@ -106,12 +106,12 @@ public class Pruebas {
         estudiantePreferenciaDAO = epDAO;
 
 
-        // Inicialización de Servicios (BO) - Inyección de Dependencias
+        // Inicializacion de Servicios (BO) - Inyeccion de Dependencias
         usuarioService = new EstudianteBO(estudianteDAO, interaccionDAO, ehDAO, epDAO, chatDAO); 
         interaccionService = new InteraccionBO(interaccionDAO, estudianteDAO, chatDAO);
         chatService = new ChatBO(chatDAO, mensajeDAO, estudianteDAO);
         
-        // CORRECCIÓN: Inicialización de los servicios de enlace (que faltaba)
+        // CORRECCION: Inicializacion de los servicios
         estudianteHobbyService = new BO.EstudianteHobbyBO(ehDAO, estudianteDAO, hobbyDAO); 
         estudiantePreferenciaService = new BO.EstudiantePreferenciaBO(epDAO, estudianteDAO, preferenciaDAO);
 
@@ -143,7 +143,7 @@ public class Pruebas {
         }
 
         try {
-            // Obtenemos la lista de entidades recién creadas para usarlas en las pruebas
+            // Obtenemos la lista de entidades recien creadas para usarlas en las pruebas
             return estudianteDAO.findEntities(dtos.length, 0);
         } catch (SQLException e) {
             throw new RuntimeException("Fallo al obtener la lista de estudiantes.", e);
@@ -167,9 +167,7 @@ public class Pruebas {
         return list.get(RANDOM.nextInt(list.size()));
     }
 
-    // ====================================================================
-    // 2. DEMOSTRACIÓN FUNCIONAL DE CASOS DE USO
-    // ====================================================================
+    // DEMOSTRACION FUNCIONAL DE CASOS DE USO
     private static void demostrarFuncionalidad(List<Estudiante> estudiantes) throws Exception {
         if (estudiantes.size() < 2) {
             System.out.println(" ERROR: La prueba requiere al menos 2 estudiantes.");
@@ -180,7 +178,7 @@ public class Pruebas {
         Estudiante eRicardo = estudiantes.get(1); // Ricardo (LIC_ARQUITECTURA)
         Estudiante eAndrea = estudiantes.get(2); // Andrea (LIC_PSICOLOGIA)
 
-        // --- 2.1 DEMOSTRACIÓN DE CARGA DE CATÁLOGOS Y ENLACES ---
+        // DEMOSTRACION DE CARGA
         Hobby hVideojuegos = new Hobby();
         hVideojuegos.setHobbie(TipoHobbies.VIDEOJUEGOS);
 
@@ -188,17 +186,17 @@ public class Pruebas {
         pMujeres.setSexo(Sexo.MUJER);
         pMujeres.setContenido("Mujeres");
 
-        // Persistir Catálogos
+        // Persistir Catalogos
         hVideojuegos = hobbyDAO.create(hVideojuegos);
         pMujeres = preferenciaDAO.create(pMujeres);
         System.out.printf("\n CATALOGOS: Creados Hobby (%s) y Preferencia (%s).\n", hVideojuegos.getHobbie(), pMujeres.getSexo());
 
-        // ASIGNACIÓN DE ENLACES (Para validar EnlaceDAO)
+        // ASIGNACION DE ENLACES (Para validar EnlaceDAO)
         estudianteHobbyService.agregarHobbyAEstudiante(eRicardo.getId(), hVideojuegos.getId());
         estudiantePreferenciaService.agregarPreferenciaAEstudiante(eRicardo.getId(), pMujeres.getId());
         System.out.printf(" ENLACES: %s tiene Hobby y Preferencia asignados.\n", eRicardo.getNombre());
 
-        // --- 2.2 DEMOSTRACIÓN CRUD (UPDATE / READ) ---
+        // DEMOSTRACION CRUD (UPDATE / READ) ---
         EstudianteDTO updateDto = new EstudianteDTO.BuiderEstudiante()
                 .carrera(eSofia.getCarrera())
                 .nombre("SOFIA CARSON")
@@ -213,7 +211,7 @@ public class Pruebas {
         System.out.printf("\n--- 2. DEMOSTRACION CRUD (UPDATE/READ) ---\n");
         System.out.printf(" UPDATE: Estudiante %d actualizado a: %s\n", eSofia.getId(), usuarioService.buscarPorId(eSofia.getId()).getNombre());
 
-        // 2.3 VALIDACIÓN: Correo Duplicado (Regla: No Duplicar Datos)
+        // VALIDACION: Correo Duplicado (Regla: No Duplicar Datos)
         EstudianteDTO dtoDuplicado = new EstudianteDTO.BuiderEstudiante()
                 .carrera(Carrera.LIC_ARQUITECTURA).nombre("X").apPaterno("Y").apMaterno("Z")
                 .correo(eSofia.getCorreo())
@@ -224,47 +222,47 @@ public class Pruebas {
             System.out.println(" VALIDACION (No Duplicar Correo): Capturado error. OK.");
         }
 
-        // --- 3. DEMOSTRACIÓN DE LÓGICA DE MATCH (INTERACCIONES) ---
+        //  DEMOSTRACION DE LÓGICA DE MATCH (INTERACCIONES) ---
         System.out.println("\n--- 3. DEMOSTRACION DE MATCH/MENSAJERIA ---");
 
-        // 3.1 Interacción 1 (LIKE de Ricardo a Sofía)
+        // Interaccion 1 (LIKE de Ricardo a Sofía)
         interaccionService.registrarInteraccionYBuscarMatch(eRicardo.getId(), eSofia.getId(), Reaccion.LIKE);
         System.out.printf("  ➡️ LIKE 1: %s gusta de %s (No Match)\n", eRicardo.getNombre(), eSofia.getNombre());
 
-        // 3.2 Interacción 2 (LIKE de Sofía a Ricardo -> ¡MATCH!)
+        // Interaccion 2 (LIKE de Sofía a Ricardo -> ¡MATCH!)
         Optional<Chat> match = interaccionService.registrarInteraccionYBuscarMatch(eSofia.getId(), eRicardo.getId(), Reaccion.LIKE);
 
         if (match.isPresent()) {
             System.out.printf(" LIKE 2: %s gusta de %s. -> ¡MATCH CREADO! (Chat ID: %d)\n", eSofia.getNombre(), eRicardo.getNombre(), match.get().getId());
 
-            // --- 4. DEMOSTRACIÓN DE MENSAJERÍA ---
+            // DEMOSTRACION DE MENSAJERIA ---
             enviarMensajesDePrueba(match.get());
 
         } else {
-           // System.out.println("  ERROR: No se pudo generar el Match de prueba.");
+            System.out.println("  ERROR: No se pudo generar el Match de prueba.");
         }
-        // --- 5. DEMOSTRACIÓN DE CONSULTAS COMPLEJAS ---
+        //  DEMOSTRACION DE CONSULTAS COMPLEJAS ---
         System.out.println("\n--- 5. DEMOSTRACION DE CONSULTAS COMPLEJAS ---");
 
-        // 5.1 CONSULTA: Listar Matches de Sofía
+        // CONSULTA: Listar Matches de Sofia
         List<Chat> matchesEA = interaccionService.obtenerMatchesDeEstudiante(eSofia.getId());
         System.out.printf(" CONSULTA: %s tiene %d Match(es) activos.\n", eSofia.getNombre(), matchesEA.size());
 
-        // 5.2 CONSULTA: Explorar Candidatos (Excluye vistos)
+        // CONSULTA: Explorar Candidatos (Excluye vistos)
         List<Estudiante> candidatos = interaccionService.explorarCandidatos(eSofia.getId(), 5);
         System.out.printf("  CONSULTA: Exploracion de %s. Vio %d candidatos.\n", eSofia.getNombre(), candidatos.size());
 
-        // 5.3 CONSULTA: Historial de Chat
+        // CONSULTA: Historial de Chat
         if (!matchesEA.isEmpty()) {
             List<Mensaje> historial = chatService.historialChat(matchesEA.get(0).getId(), 10);
             System.out.printf(" CONSULTA: Historial del Chat %d. Mensajes: %d.\n", matchesEA.get(0).getId(), historial.size());
         }
 
-        // 5.4 CONSULTA: Listar Hobbies del Estudiante (Prueba de Enlace)
+        // CONSULTA: Listar Hobbies del Estudiante (Prueba de Enlace)
         List<Hobby> hobbies = estudianteHobbyDAO.buscarHobbiesPorEstudiante(eRicardo.getId());
         System.out.printf(" CONSULTA: Ricardo tiene %d hobbies registrados (Esperado: 1).\n", hobbies.size());
 
-        // --- 6. DEMOSTRACIÓN DE DELETE ---
+        // DEMOSTRACION DE DELETE ---
         usuarioService.eliminarCuenta(eAndrea.getId());
         System.out.printf("\n--- 6. DEMOSTRACION DE DELETE ---\n");
         System.out.printf(" DELETE: Estudiante %s eliminado. )\n", eAndrea.getNombre());
